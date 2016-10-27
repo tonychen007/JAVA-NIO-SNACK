@@ -29,8 +29,9 @@ public class Test {
 			pthSys.jarFileSystem();
 			pthSys.normalizePath();
 			
-			Path abs = Paths.get("Z:/2.txt").toAbsolutePath();
-			Path reb = Paths.get("Z:/2.txt").toRealPath(LinkOption.NOFOLLOW_LINKS);
+			Path base = Paths.get("Z:/TEMP/Default/Cache");			
+			Path rbase = base.resolve("data_0");
+			Path sibling = base.resolveSibling("Media Cache");
 			
 			int aaa = 0;
 		} catch (URISyntaxException | IOException e) {
