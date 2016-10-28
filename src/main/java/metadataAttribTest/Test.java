@@ -1,4 +1,4 @@
-package MetadataAttribTest;
+package metadataAttribTest;
 
 import java.io.IOException;
 import java.nio.file.FileStore;
@@ -50,5 +50,6 @@ public class Test {
 		
 		AclFileAttributeView acl = Files.getFileAttributeView(path, AclFileAttributeView.class);
 		List<AclEntry> aclList = acl.getAcl();
+			
 	}
 }
