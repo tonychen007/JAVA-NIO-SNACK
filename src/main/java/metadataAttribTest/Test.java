@@ -1,6 +1,7 @@
 package metadataAttribTest;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.FileStore;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
@@ -16,6 +17,7 @@ import java.nio.file.attribute.DosFileAttributes;
 import java.nio.file.attribute.FileAttributeView;
 import java.nio.file.attribute.FileOwnerAttributeView;
 import java.nio.file.attribute.PosixFileAttributes;
+import java.nio.file.attribute.UserDefinedFileAttributeView;
 import java.nio.file.attribute.UserPrincipal;
 import java.nio.file.attribute.UserPrincipalLookupService;
 import java.util.Iterator;
@@ -37,7 +39,7 @@ public class Test {
 			boolean ret = fileStore.supportsFileAttributeView(BasicFileAttributeView.class);
 		}
 		
-		Path path = Paths.get("Z:/1.txt");
+		Path path = Paths.get("Z:/");
 		DosFileAttributes attrib = Files.readAttributes(path, DosFileAttributes.class);		
 		UserPrincipal prin =  Files.getOwner(path);
 		String owner = prin.getName();
@@ -50,6 +52,10 @@ public class Test {
 		
 		AclFileAttributeView acl = Files.getFileAttributeView(path, AclFileAttributeView.class);
 		List<AclEntry> aclList = acl.getAcl();
-			
+		
+		UserDefinedFileAttributeView udfav = Files.getFileAttributeView(path,UserDefinedFileAttributeView.class);
+		udfav.write("file.desc", Charset.forName("UTF-8").encode("The file containts private information"));
+		List<String> udAttrib = udfav.list();
+				
 	}
 }
