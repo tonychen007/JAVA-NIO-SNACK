@@ -19,5 +19,7 @@ public class Test {
 		// To check if the path is a symbolicLink, LinkOption.NOFOLLOW_LINKS should be passed
 		BasicFileAttributes attr = Files.readAttributes(link, BasicFileAttributes.class,LinkOption.NOFOLLOW_LINKS);
 		boolean ret = attr.isSymbolicLink();
+		
+		ret = Files.isSameFile(link, target);
 	}
 }
