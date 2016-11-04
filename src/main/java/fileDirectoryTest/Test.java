@@ -3,7 +3,9 @@ package fileDirectoryTest;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
@@ -12,6 +14,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 
 import javax.imageio.ImageIO;
@@ -34,9 +37,18 @@ public class Test {
 
 	public static void main(String[] args) throws IOException {
 		Iterable<Path> dirs = FileSystems.getDefault().getRootDirectories();
-		printDir(Paths.get("Z:/TEMP"));
+		//printDir(Paths.get("Z:/TEMP"));
 		//createFile();
-		createUnBufferedFile();
+		//createUnBufferedFile();
+		createTempDirAndFile();
+		Runtime run = Runtime.getRuntime();
+		run.addShutdownHook(new Thread() {
+			
+			@Override
+			public void run() {				
+				System.out.println("JVM shutdown hook");
+			}
+		});
 	}
 
 	public static void printDir(Path path) throws IOException {
@@ -67,5 +79,22 @@ public class Test {
 		bufWr.write("Hello");
 		bufWr.close();
 		ous.close();
+	}
+	
+	public static void createTempDirAndFile() throws IOException {
+		Path tempDir =  Files.createTempDirectory(null);
+		System.out.println("The temp dir is : " + tempDir);	
+		Path tempFile = Files.createTempFile(tempDir,null, null);
+		System.out.println("The temp file is : " + tempFile);		
+		
+		InputStream is = null;
+		try {
+			is = new FileInputStream(Paths.get("Z:/1.txt").toFile());
+			Files.copy(is, Paths.get("Z:/2.txt"),StandardCopyOption.REPLACE_EXISTING);
+		} catch (Exception e) {
+			
+		}
+		
+		is.close();
 	}
 }
