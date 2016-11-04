@@ -10,6 +10,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+@SuppressWarnings("unused")
 public class Search implements FileVisitor<Path> {
 
 	private Path searchedFile;
