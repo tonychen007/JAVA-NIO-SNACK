@@ -19,7 +19,8 @@ public class Test {
 		try {
 			watchService = FileSystems.getDefault().newWatchService();
 			WatchThread wth = new WatchThread(watchService);
-			th1 = new Thread(new WatchThread(watchService));			
+			wth.registerTree(path);
+			th1 = new Thread(wth);			
 			th1.start();
 			th1.join();
 			watchService.close();	
