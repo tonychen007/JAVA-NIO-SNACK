@@ -14,10 +14,31 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.EnumSet;
 
+
+class Foo<T extends Foo<T>> {
+	T data;
+
+	public T getData() {
+		return data;
+	}
+
+	public void setData(T data) {
+		this.data = data;
+	}
+	
+}
+
+class Color extends Foo<Color> {
+	
+}
+
 @SuppressWarnings("all")
 public class BufferChannelTest {
 
 	public static void main(String[] args) {
+		Color cl = new Color();
+		String sb = cl.getData().getClass().getName();
+		
 		Path file = Paths.get("Z:/1.tmp");
 		
 		// SeekableChannel can be cast into FileChannel		
@@ -50,3 +71,6 @@ public class BufferChannelTest {
 		}
 	}
 }
+
+
+
