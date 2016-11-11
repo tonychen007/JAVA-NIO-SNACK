@@ -29,47 +29,38 @@ public class Server {
 			srv.setSockOpts(servCh);
 
 			servCh.bind(new InetSocketAddress(10086), 5);
+			ByteBuffer buf = ByteBuffer.allocateDirect(1024);
 			System.out.println("Bind address:" + servCh.getLocalAddress());
-			
-			SocketChannel socketChannel = servCh.accept();
-			System.out.println("Incoming connection from: " + socketChannel.getRemoteAddress());
-			
-			// Use telnet to connect to the port 10086
-			ByteBuffer buf = ByteBuffer.allocateDirect(10);
-			InputStream ins = socketChannel.socket().getInputStream();
-			OutputStream ons =  socketChannel.socket().getOutputStream();
-			ReadableByteChannel readCh = Channels.newChannel(ins);  
-			WritableByteChannel writeCh = Channels.newChannel(ons);
-			
-			/* ByteBuffer Methods
-			while(socketChannel.read(buf) != -1) {
-				buf.flip();
-				socketChannel.write(buf);
+			SocketChannel socketChannel;
+
+			while (true) {
+				socketChannel = servCh.accept();
 				
-				if(buf.hasRemaining()) {
-					buf.compact();
-				} else {
-					buf.clear();
+				System.out.println("Incoming connection from: " + socketChannel.getRemoteAddress());
+
+				// Use telnet to connect to the port 10086
+				InputStream ins = socketChannel.socket().getInputStream();
+				OutputStream ons = socketChannel.socket().getOutputStream();
+				ReadableByteChannel readCh = Channels.newChannel(ins);
+				WritableByteChannel writeCh = Channels.newChannel(ons);
+
+				while (readCh.read(buf) != -1) {
+					buf.flip();
+					writeCh.write(buf);
+					if (buf.hasRemaining()) {
+						buf.compact();
+					} else {
+						buf.clear();
+					}
 				}
+
+//				socketChannel.shutdownInput();
+//				socketChannel.shutdownOutput();
+//
+//				socketChannel.close();
+//				servCh.close();
 			}
-			*/
-			
-			while (readCh.read(buf) != -1) {
-				buf.flip();
-				writeCh.write(buf);
-				if(buf.hasRemaining()) {
-					buf.compact();
-				} else {
-					buf.clear();
-				}	
-			}
-			
-			socketChannel.shutdownInput();
-			socketChannel.shutdownOutput();			
-	
-			socketChannel.close();
-			servCh.close();
-			
+
 		} catch (IOException e) {
 			String err = e.getCause().getMessage();
 			System.out.println(err);
@@ -86,11 +77,11 @@ public class Server {
 			System.out.println("Socket opts:" + name);
 		}
 	}
-	
+
 	public void setSockOpts(NetworkChannel channel) {
 		try {
-			channel.setOption(StandardSocketOptions.SO_RCVBUF,4 * 1024);
-			channel.setOption(StandardSocketOptions.SO_REUSEADDR,true);
+			channel.setOption(StandardSocketOptions.SO_RCVBUF, 4 * 1024);
+			channel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
 		} catch (IOException e) {
 			String err = e.getCause().getMessage();
 			System.out.println(err);
