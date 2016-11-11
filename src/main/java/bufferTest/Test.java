@@ -13,6 +13,10 @@ public class Test {
 		ByteBuffer buf = ByteBuffer.allocateDirect(15);
 		buf.put(b);  // pos 5, limit 15, cap 15
 		buf.flip();  // pos 0, limit 5, cap 15
+//		boolean ret = buf.hasRemaining();
+//		if (ret) {
+//			buf.compact();
+//		}
 		buf.get(b1);
 		
 		b[5] = 6;
