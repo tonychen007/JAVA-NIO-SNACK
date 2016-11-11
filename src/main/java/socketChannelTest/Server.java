@@ -11,6 +11,8 @@ import java.nio.channels.Channels;
 import java.nio.channels.NetworkChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.SelectableChannel;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.channels.WritableByteChannel;
@@ -23,12 +25,13 @@ public class Server {
 	public static void main(String[] args) {
 		Server srv = new Server();
 		try {
-			ServerSocketChannel servCh = ServerSocketChannel.open();
+			ServerSocketChannel servCh = ServerSocketChannel.open();			
 			SelectableChannel selCh = servCh.configureBlocking(true);
 			srv.dumpSockOpts(servCh);
 			srv.setSockOpts(servCh);
 
-			servCh.bind(new InetSocketAddress(10086), 5);
+			servCh.bind(new InetSocketAddress(10086), 5);		
+			
 			ByteBuffer buf = ByteBuffer.allocateDirect(1024);
 			System.out.println("Bind address:" + servCh.getLocalAddress());
 			SocketChannel socketChannel;
